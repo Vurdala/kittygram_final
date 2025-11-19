@@ -85,7 +85,7 @@ jobs:
           # Для каждого пересобранного образа 
           # устанавливаем тег latest, чтобы потом
           # на сервере и в docker-compose.yml не указывать версию
-          tags: lastman572/kittygram_backend:latest
+          tags: lastman572/kitty_backend:latest
   frontend_tests:
     runs-on: ubuntu-latest
 
@@ -128,7 +128,7 @@ jobs:
         with:
           context: ./frontend/
           push: true
-          tags: lastman572/kittygram_frontend:latest
+          tags: lastman572/kitty_frontend:latest
   build_gateway_and_push_to_docker_hub:
     name: Push gateway Docker image to DockerHub
     runs-on: ubuntu-latest
@@ -148,7 +148,7 @@ jobs:
           context: ./gateway/
           push: true
           # Тут вместо username должен быть ваш логин на Docker Hub
-          tags: lastman572/kittygram_gateway:latest
+          tags: lastman572/kitty_gateway:latest
   deploy:
     runs-on: ubuntu-latest
     needs: 

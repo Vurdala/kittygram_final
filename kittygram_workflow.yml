@@ -183,10 +183,23 @@ jobs:
         script: |
           set -e
           cd kittygram_final
+
           sudo docker-compose -f docker-compose.production.yml pull
           sudo docker-compose -f docker-compose.production.yml down
+
+          # Запускаем контейнеры в фоне
           sudo docker-compose -f docker-compose.production.yml up -d
-          sleep 10
+
+          # Ждём, пока контейнер backend запустится
+          echo "Ожидаем запуска контейнера backend..."
+          timeout 30s bash -c '
+            while ! sudo docker-compose -f docker-compose.production.yml ps | grep backend | grep -q "Up"; do
+              echo "Backend ещё не запущен... ждём 5 сек"
+              sleep 5
+            done
+          ' || (echo "Backend не запустился за 30 секунд" && exit 1)
+
+          # Теперь можно выполнять миграции
           sudo docker-compose -f docker-compose.production.yml exec -T backend python manage.py migrate
           sudo docker-compose -f docker-compose.production.yml exec -T backend python manage.py collectstatic --noinput
           sudo docker-compose -f docker-compose.production.yml exec -T backend cp -r /app/collected_static/. /backend_static/static/

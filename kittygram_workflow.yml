@@ -168,7 +168,7 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        source: "."
+        source: "docker-compose.production.yml"
         target: "kittygram_final"
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
@@ -181,25 +181,23 @@ jobs:
         # которые нужно выполнить на сервере, 
         # с которым установлено соединение
         script: |
-          set -e
           cd kittygram_final
-
-          sudo docker-compose -f docker-compose.production.yml pull
-          sudo docker-compose -f docker-compose.production.yml down
-
-          # Запускаем контейнеры в фоне
-          sudo docker-compose -f docker-compose.production.yml up -d
-
-          # Ждём, пока контейнер backend запустится
-          echo "Ожидаем запуска контейнера backend..."
-          timeout 30s bash -c '
-            while ! sudo docker-compose -f docker-compose.production.yml ps | grep backend | grep -q "Up"; do
-              echo "Backend ещё не запущен... ждём 5 сек"
-              sleep 5
-            done
-          ' || (echo "Backend не запустился за 30 секунд" && exit 1)
-
-          # Теперь можно выполнять миграции
-          sudo docker-compose -f docker-compose.production.yml exec -T backend python manage.py migrate
-          sudo docker-compose -f docker-compose.production.yml exec -T backend python manage.py collectstatic --noinput
-          sudo docker-compose -f docker-compose.production.yml exec -T backend cp -r /app/collected_static/. /backend_static/static/
+          # Выполняет pull образов с Docker Hub
+          sudo docker compose -f docker-compose.production.yml pull
+          # Перезапускает все контейнеры в Docker Compose
+          sudo docker compose -f docker-compose.production.yml down
+          sudo docker compose -f docker-compose.production.yml up -d
+          # Выполняет миграции и сбор статики
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+          sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+          sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+  send_message:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+    - name: Send message
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: Деплой успешно выполнен!

@@ -3,6 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from django.core.management.utils import get_random_secret_key
+from rest_framework.pagination import PageNumberPagination
 
 load_dotenv()
 
@@ -72,22 +73,20 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+PASSWORD_VALIDATION_PATH = "django.contrib.auth.password_validation"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": f"{PASSWORD_VALIDATION_PATH}.UserAttributeSimilarityValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": f"{PASSWORD_VALIDATION_PATH}.MinimumLengthValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        "NAME": f"{PASSWORD_VALIDATION_PATH}.CommonPasswordValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "NAME": "{PASSWORD_VALIDATION_PATH}.NumericPasswordValidator",
     },
 ]
 
@@ -117,6 +116,6 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
     ],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DEFAULT_PAGINATION_CLASS": PageNumberPagination,
     "PAGE_SIZE": 10,
 }

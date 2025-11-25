@@ -99,6 +99,24 @@ cd ../frontend
 npm install
 npm start
 ```
+8.**Заполнить .env**
+
+# Django настройки
+```
+DEBUG=False
+SECRET_KEY=your-super-secret-django-key-here-make-it-very-long-and-random
+ALLOWED_HOSTS=localhost,127.0.0.1,.your-domain.com
+```
+# База данных PostgreSQL
+```
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=kittygram
+DB_USER=kittygram_user
+DB_PASSWORD=your-secure-database-password
+DB_HOST=db
+DB_PORT=5432
+```
+
 
 ### 🔌 API Endpoints
 Аутентификация

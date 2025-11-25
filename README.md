@@ -1,26 +1,137 @@
-#  Как работать с репозиторием финального задания
+[![Main Taski workflow](https://github.com/Vurdala/kittygram_final/actions/workflows/main.yml/badge.svg)](https://github.com/Vurdala/kittygram_final/actions/workflows/main.yml)
 
-## Что нужно сделать
+# 🐱 KittyGram
 
-Настроить запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
+Веб-приложение для обмена фотографиями котиков с API на Django REST Framework и фронтендом на React.
 
-## Как проверить работу с помощью автотестов
+## 📋 Оглавление
 
-В корне репозитория создайте файл tests.yml со следующим содержимым:
-```yaml
-repo_owner: ваш_логин_на_гитхабе
-kittygram_domain: полная ссылка (https://доменное_имя) на ваш проект Kittygram
-taski_domain: полная ссылка (https://доменное_имя) на ваш проект Taski
-dockerhub_username: ваш_логин_на_докерхабе
+- [Функциональности](#-функциональности)
+- [Технологический стек](#-технологический-стек)
+- [Установка и запуск](#-установка-и-запуск)
+- [API Endpoints](#-api-endpoints)
+- [Разработка](#-разработка)
+- [Деплой](#-деплой)
+- [Автор](#-автор)
+
+## 🚀 Функциональности
+
+- 📸 Загрузка и управление фотографиями котиков
+- 👤 Регистрация и аутентификация пользователей
+- 💬 Комментарии к фотографиям
+- 🏷️ Теги и категории для котиков
+- 📱 Responsive дизайн
+- 🔐 JWT аутентификация
+- 🖼️ Загрузка медиа файлов
+
+## 🛠 Технологический стек
+
+### Backend
+- **Python 3.11** - основной язык программирования
+- **Django 4.2** - веб-фреймворк
+- **Django REST Framework 3.14** - API
+- **PostgreSQL** - база данных
+- **Simple JWT** - аутентификация
+- **Pillow** - работа с изображениями
+- **CORS Headers** - кросс-доменные запросы
+
+### Frontend
+- **React** - пользовательский интерфейс
+- **Axios** - HTTP клиент
+
+### Инфраструктура
+- **Nginx** - веб-сервер
+- **Gunicorn** - WSGI сервер
+- **Docker** (опционально) - контейнеризация
+
+## 📦 Установка и запуск
+
+### Предварительные требования
+- Python 3.9+
+- PostgreSQL 12+
+- Node.js 14+ (для фронтенда)
+
+### Backend установка
+
+1. **Клонируйте репозиторий**
+```bash
+git clone https://github.com/Vurdala/kittygram_final.git
+cd kittygram_final/backend
+```
+2.**Создайте виртуальное окружение**
+
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# или
+venv\Scripts\activate  # Windows
+```
+3.**Установите зависимости**
+
+```bash
+pip install -r requirements.txt
+```
+3.**Настройте переменные окружения**
+
+```bash
+cp .env.example .env
+# Отредактируйте .env файл с вашими настройками
+```
+4.**Примените миграции**
+
+```bash
+python manage.py migrate
+```
+5.**Создайте суперпользователя**
+```
+bash
+python manage.py createsuperuser
+```
+6.**Запустите сервер**
+```
+bash
+python manage.py runserver
+```
+7.**Frontend установка**
+```
+bash
+cd ../frontend
+npm install
+npm start
 ```
 
-Скопируйте содержимое файла `.github/workflows/main.yml` в файл `kittygram_workflow.yml` в корневой директории проекта.
+### 🔌 API Endpoints
+Аутентификация
+POST /api/auth/login/ - вход в систему
 
-Для локального запуска тестов создайте виртуальное окружение, установите в него зависимости из backend/requirements.txt и запустите в корневой директории проекта `pytest`.
+POST /api/auth/register/ - регистрация
 
-## Чек-лист для проверки перед отправкой задания
+POST /api/auth/logout/ - выход из системы
 
-- Проект Taski доступен по доменному имени, указанному в `tests.yml`.
-- Проект Kittygram доступен по доменному имени, указанному в `tests.yml`.
-- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
-- В корне проекта есть файл `kittygram_workflow.yml`.
+POST /api/auth/token/refresh/ - обновление JWT токена
+
+Котики
+GET /api/cats/ - список всех котиков
+
+POST /api/cats/ - создание нового котика
+
+GET /api/cats/{id}/ - детали котика
+
+PUT /api/cats/{id}/ - обновление котика
+
+DELETE /api/cats/{id}/ - удаление котика
+
+## Фотографии
+GET /api/photos/ - все фотографии
+
+POST /api/photos/ - загрузка фото
+
+GET /api/photos/{id}/ - детали фото
+
+## Комментарии
+GET /api/comments/ - комментарии
+
+POST /api/comments/ - создание комментария
+
+## 👤 Автор
+Vurdala - GitHub профиль

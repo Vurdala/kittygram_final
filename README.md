@@ -116,7 +116,15 @@ DB_PASSWORD=your-secure-database-password
 DB_HOST=db
 DB_PORT=5432
 ```
-
+### Запуск контейнеров
+```
+Запустить контейнеры:
+sudo docker compose -f docker-compose.production.yml up -d
+Выполнить миграции:
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+```
 
 ### 🔌 API Endpoints
 Аутентификация

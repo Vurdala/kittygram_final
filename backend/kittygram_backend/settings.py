@@ -3,7 +3,6 @@ from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
 from dotenv import load_dotenv
-from rest_framework.pagination import PageNumberPagination
 
 load_dotenv()
 
@@ -86,7 +85,7 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": f"{PASSWORD_VALIDATION_PATH}.CommonPasswordValidator",
     },
     {
-        "NAME": "{PASSWORD_VALIDATION_PATH}.NumericPasswordValidator",
+        "NAME": f"{PASSWORD_VALIDATION_PATH}.NumericPasswordValidator",
     },
 ]
 
@@ -116,6 +115,8 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
     ],
-    "DEFAULT_PAGINATION_CLASS": PageNumberPagination,
+    "DEFAULT_PAGINATION_CLASS": [
+        "rest_framework.pagination.PageNumberPagination",
+    ],
     "PAGE_SIZE": 10,
 }
